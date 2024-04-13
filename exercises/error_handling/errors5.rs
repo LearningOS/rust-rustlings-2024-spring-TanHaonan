@@ -22,14 +22,16 @@
 // Execute `rustlings hint errors5` or use the `hint` watch subcommand for a
 // hint.
 
-// I AM NOT DONE
 
 use std::error;
+use std::error::Error;
 use std::fmt;
 use std::num::ParseIntError;
 
 // TODO: update the return type of `main()` to make this compile.
-fn main() -> Result<(), Box<dyn ???>> {
+// 使用boxed error是考虑同一个函数下可能会有多个类型error，
+// 但是Result不做识别，所以不实现Error特性也可能被当作Error，不推荐
+fn main() -> Result<(), Box<dyn error::Error>> {
     let pretend_user_input = "42";
     let x: i64 = pretend_user_input.parse()?;
     println!("output={:?}", PositiveNonzeroInteger::new(x)?);
