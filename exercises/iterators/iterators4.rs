@@ -3,7 +3,7 @@
 // Execute `rustlings hint iterators4` or use the `hint` watch subcommand for a
 // hint.
 
-// I AM NOT DONE
+
 
 pub fn factorial(num: u64) -> u64 {
     // Complete this function to return the factorial of num
@@ -15,6 +15,14 @@ pub fn factorial(num: u64) -> u64 {
     // For an extra challenge, don't use:
     // - recursion
     // Execute `rustlings hint iterators4` for hints.
+    // 注意start..end是左闭右开，而..=是左右闭
+    (0..=num).fold(1, |acc, x| {
+        match x {
+            0 | 1 => acc,
+            _ => acc * x,
+        }
+    })
+    // https://doc.rust-lang.org/std/iter/trait.Iterator.html#method.fold
 }
 
 #[cfg(test)]
