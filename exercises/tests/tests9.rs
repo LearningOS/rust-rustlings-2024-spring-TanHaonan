@@ -27,15 +27,19 @@
 //
 // You should NOT modify any existing code except for adding two lines of attributes.
 
-// I AM NOT DONE
+// 必须添加注解 #[no_mangle]，这样编译器不会修改名称
 
 extern "Rust" {
+    #[no_mangle]
     fn my_demo_function(a: u32) -> u32;
+    #[no_mangle]
+    #[link_name = "my_demo_function"]
     fn my_demo_function_alias(a: u32) -> u32;
 }
 
 mod Foo {
     // No `extern` equals `extern "Rust"`.
+    #[no_mangle]
     fn my_demo_function(a: u32) -> u32 {
         a
     }
