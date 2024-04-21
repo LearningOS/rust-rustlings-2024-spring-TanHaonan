@@ -7,6 +7,8 @@
 // Execute `rustlings hint from_into` or use the `hint` watch subcommand for a
 // hint.
 
+use std::{fmt::Debug, hash::DefaultHasher};
+
 #[derive(Debug)]
 struct Person {
     name: String,
@@ -40,10 +42,22 @@ impl Default for Person {
 // If while parsing the age, something goes wrong, then return the default of
 // Person Otherwise, then return an instantiated Person object with the results
 
-// I AM NOT DONE
-
 impl From<&str> for Person {
     fn from(s: &str) -> Person {
+        if s.is_empty() {
+            Default::default()
+        }
+        // 这里应该只有一个","可以被我们split到，once可以保证只split第一个，有错后面处理
+        match s.split_once(",") {
+            Some((name, _)) if name.is_empty() => Default::default(),
+            Some((name, age_str)) => {
+                match age_str.parse::<usize>() {
+                    Ok(age) => Person{name: name.to_string(), age: age},
+                    Err(_) => Default::default()
+                }
+            },
+            None => Default::default()
+        }
     }
 }
 

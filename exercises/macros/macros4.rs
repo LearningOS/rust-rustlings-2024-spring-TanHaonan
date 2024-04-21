@@ -3,13 +3,13 @@
 // Execute `rustlings hint macros4` or use the `hint` watch subcommand for a
 // hint.
 
-// I AM NOT DONE
 
 #[rustfmt::skip]
 macro_rules! my_macro {
     () => {
         println!("Check out my macro!");
-    }
+    };
+    // 缺的就是上面的分号，分割清楚“部分”
     ($val:expr) => {
         println!("Look at this other macro: {}", $val);
     }
