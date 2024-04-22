@@ -2,10 +2,10 @@
 	single linked list merge
 	This problem requires you to merge two ordered singly linked lists into one ordered singly linked list
 */
-// I AM NOT DONE
+
 
 use std::fmt::{self, Display, Formatter};
-use std::ptr::NonNull;
+use std::ptr::{self, NonNull};
 use std::vec::*;
 
 #[derive(Debug)]
@@ -29,13 +29,13 @@ struct LinkedList<T> {
     end: Option<NonNull<Node<T>>>,
 }
 
-impl<T> Default for LinkedList<T> {
+impl<T: std::cmp::PartialOrd + Clone> Default for LinkedList<T> {
     fn default() -> Self {
         Self::new()
     }
 }
 
-impl<T> LinkedList<T> {
+impl<T: std::cmp::PartialOrd + Clone> LinkedList<T> {
     pub fn new() -> Self {
         Self {
             length: 0,
@@ -71,12 +71,46 @@ impl<T> LinkedList<T> {
     }
 	pub fn merge(list_a:LinkedList<T>,list_b:LinkedList<T>) -> Self
 	{
-		//TODO
-		Self {
-            length: 0,
-            start: None,
-            end: None,
+        let mut result = LinkedList::<T>::new();
+        // // Boundary circumstances
+        // match (list_a.length, list_b.length) {
+        //     (0, 0) => Self::new(),
+        //     (_, 0) => list_a,
+        //     (0, _) => list_b,
+        //     _ => {
+        //     }
+        // }
+        let  (mut head_a, mut head_b) = (
+            list_a.start, 
+            list_b.start,
+        );
+        // Potential conditions
+        // 1. ab非空
+        while let (Some(ptr_a), Some(ptr_b)) = (head_a, head_b) {
+            unsafe{
+                if ptr_a.as_ref().val < ptr_b.as_ref().val {
+                    result.add(ptr_a.as_ref().val.clone());
+                    head_a = (*ptr_a.as_ptr()).next;
+                } else {
+                    result.add(ptr_b.as_ref().val.clone());
+                    head_b = (*ptr_b.as_ptr()).next;
+                }
+            }
         }
+        // 2. a/b空
+        while let (Some(ptr_a), None) = (head_a, head_b) {
+            unsafe {
+                result.add(ptr_a.as_ref().val.clone());
+                head_a = (*ptr_a.as_ptr()).next;
+            }
+        }
+        while let (None, Some(ptr_b)) = (head_a, head_b) {
+            unsafe {
+                result.add(ptr_b.as_ref().val.clone());
+                head_b = (*ptr_b.as_ptr()).next;
+            }
+        }
+		result
 	}
 }
 
