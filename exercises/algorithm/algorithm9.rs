@@ -2,10 +2,9 @@
 	heap
 	This question requires you to implement a binary heap function
 */
-// I AM NOT DONE
-
 use std::cmp::Ord;
 use std::default::Default;
+use std::mem::swap;
 
 pub struct Heap<T>
 where
@@ -37,7 +36,9 @@ where
     }
 
     pub fn add(&mut self, value: T) {
-        //TODO
+        self.count += 1;
+        self.items.push(value);
+        self.percolate_up(self.count)
     }
 
     fn parent_idx(&self, idx: usize) -> usize {
@@ -57,8 +58,51 @@ where
     }
 
     fn smallest_child_idx(&self, idx: usize) -> usize {
-        //TODO
-		0
+        let l = self.left_child_idx(idx);
+        let r = self.right_child_idx(idx);
+        if r > self.count ||
+            (self.comparator)(&self.items[l], &self.items[r]) {
+            l
+        } else {
+            r
+        }
+    }
+
+    fn percolate_up(&mut self, idx: usize) {
+        let mut idx = idx;
+        while 1 < idx && 
+            (self.comparator)(
+                &self.items[idx], 
+                &self.items[self.parent_idx(idx)]) {
+            // if (self.comparator)(self.parent_idx(idx), idx) {break;}
+            let parent = self.parent_idx(idx);
+            self.items.swap(idx, parent);
+            idx = parent;
+        }
+    }
+
+    fn percolate_down(&mut self, idx: usize) {
+        let mut idx = idx;
+        while self.children_present(idx) && 
+            (self.comparator)(
+                &self.items[self.smallest_child_idx(idx)],
+                &self.items[idx]
+                ) {
+            let smallest = self.smallest_child_idx(idx);
+            self.items.swap(smallest, idx);
+            idx = smallest;
+        }
+    }
+
+    fn pop(&mut self) -> Option<T> {
+        if self.is_empty() {
+            return None;
+        }
+        // eq to swap head and tail then delete tail
+        let top = self.items.swap_remove(1);
+        self.count -= 1;
+        self.percolate_down(1);
+        Some(top)
     }
 }
 
@@ -84,8 +128,7 @@ where
     type Item = T;
 
     fn next(&mut self) -> Option<T> {
-        //TODO
-		None
+        self.pop()
     }
 }
 
